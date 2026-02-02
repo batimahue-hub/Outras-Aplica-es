@@ -209,7 +209,7 @@
                     <p class="text-center text-gray-500 py-4">A carregar lista...</p>
                 </div>
             </div>
-            <div class="p-3 bg-gray-50 text-center text-xs text-gray-400 border-t">
+            <div class="p-3 bg-gray-50 text-center text-xs text-gray-400 border-t" id="connectionStatus">
                 Atualizado em tempo real ⚡
             </div>
         </div>
@@ -226,10 +226,28 @@
             eventTitle: "B-day da May", 
             date: "2026-02-09T19:00:00",
             locationName: "Bar e Restaurante Esperança",
-            address: "Rua Esperança, 12 - Parque União, RJ"
+            address: "Rua Esperança, 12 - Parque União, RJ",
+            adminPassword: "123" // SENHA DE ADMIN (ALTERE AQUI!)
         };
 
-        let app, db, auth, appId;
+        // ==========================================
+        // 🚨 CONFIGURAÇÃO DO FIREBASE (GOOGLE) 🚨
+        // ==========================================
+        // Cole as chaves do seu projeto Firebase aqui para funcionar no GitHub.
+        // Se este objeto estiver vazio, o modo Offline será ativado.
+        const userFirebaseConfig = {
+            apiKey: "AIzaSyAp89xUte6YK9J3m0xo7eYSCRseQcNdsPs",
+            authDomain: "nivermay-81009.firebaseapp.com",
+            projectId: "nivermay-81009",
+            storageBucket: "nivermay-81009.firebasestorage.app",
+            messagingSenderId: "683682965047",
+            appId: "1:683682965047:web:978552016e718a673341b2",
+            measurementId: "G-CTW4GDRNF5"
+        };
+        // ==========================================
+
+        let app, db, auth;
+        let isOfflineMode = false;
 
         // Inicializar UI (Ícones)
         lucide.createIcons();
@@ -293,35 +311,45 @@
             console.error("Erro ao carregar visual:", e);
         }
 
-        // 3. Inicializar Firebase Corretamente (Com Token Customizado)
+        // 3. Inicializar Firebase
         async function initFirebase() {
             try {
-                if (typeof __firebase_config !== 'undefined') {
-                    const firebaseConfig = JSON.parse(__firebase_config);
-                    app = initializeApp(firebaseConfig);
+                // Tenta usar configuração manual do usuário primeiro
+                let configToUse = null;
+                if (userFirebaseConfig && userFirebaseConfig.apiKey !== "") {
+                    configToUse = userFirebaseConfig;
+                } else if (typeof __firebase_config !== 'undefined') {
+                    // Fallback para ambiente Canvas
+                    configToUse = JSON.parse(__firebase_config);
+                }
+
+                if (configToUse) {
+                    app = initializeApp(configToUse);
                     auth = getAuth(app);
                     db = getFirestore(app);
-                    appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
                     
-                    // Lógica de Autenticação Robusta (CRÍTICO PARA CORRIGIR ERRO DE PERMISSÃO)
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    console.log("Conectado ao Firebase.");
+                    // Auth Anônima Simples
+                    await signInAnonymously(auth);
+                    console.log("Conectado ao Firebase Online.");
+                    
+                    // Atualizar UI
+                    const statusEl = document.getElementById('connectionStatus');
+                    if(statusEl) statusEl.innerHTML = "Online 🟢 Lista Sincronizada";
+                } else {
+                    throw new Error("Sem configuração");
                 }
             } catch (e) {
-                console.warn("Modo Offline Ativado: Firebase não detectado.", e);
+                console.warn("Modo Offline Ativado (Sem Firebase configurado).", e);
+                isOfflineMode = true;
+                const statusEl = document.getElementById('connectionStatus');
+                if(statusEl) statusEl.innerHTML = "Offline 💾 Lista salva apenas no seu dispositivo";
             }
         }
         
         // Executar inicialização
         initFirebase();
 
-        // 4. Configurar Botões (Funcionam com ou sem Firebase)
-        
-        // Calendário
+        // 4. Configurar Botões
         const calBtn = document.getElementById('addToCalendarBtn');
         if (calBtn) {
             calBtn.addEventListener('click', () => {
@@ -333,7 +361,7 @@
             });
         }
 
-        // Envio do Formulário (Lógica Híbrida)
+        // Envio do Formulário
         document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -344,19 +372,25 @@
 
             const name = document.getElementById('name').value;
             const companions = document.getElementById('companions').value;
+            const guestData = {
+                name: name,
+                companions: companions,
+                timestamp: new Date()
+            };
 
             try {
-                // Tenta salvar APENAS se o banco de dados existir e estiver autenticado
-                if (db && auth && auth.currentUser) {
-                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'guest_list'), {
-                        name: name,
-                        companions: companions,
-                        timestamp: new Date()
-                    });
+                if (!isOfflineMode && db) {
+                     // Modo Online: Salvar no Firestore
+                     await addDoc(collection(db, 'lista_convidados'), guestData);
                 } else {
-                    // Simula delay se não houver DB (ex: offline ou sem config)
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    console.warn("Modo demonstração: Sem banco de dados, a confirmação é apenas visual.");
+                    // Modo Offline: Salvar no LocalStorage
+                    const currentList = JSON.parse(localStorage.getItem('guest_list_local') || '[]');
+                    currentList.push({
+                        ...guestData,
+                        timestamp: new Date().toISOString()
+                    });
+                    localStorage.setItem('guest_list_local', JSON.stringify(currentList));
+                    await new Promise(r => setTimeout(r, 500));
                 }
                
                 confetti({
@@ -369,7 +403,6 @@
 
                 document.getElementById('statusMsg').classList.remove('hidden');
                 
-                // Reset após delay visual
                 setTimeout(() => {
                     btn.disabled = false;
                     btn.innerHTML = originalText;
@@ -382,71 +415,74 @@
 
             } catch (error) {
                 console.error("Erro:", error);
-                alert("Houve um erro ao salvar a confirmação. Tente novamente.");
+                alert("Houve um erro ao salvar. Tente novamente.");
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
         });
 
-        // Área Admin (Só funciona se estiver online)
+        // Área Admin
         const modal = document.getElementById('guestListModal');
         const adminBtn = document.getElementById('adminBtn');
         const closeModal = document.getElementById('closeModal');
         let unsubscribeList = null;
 
+        function renderGuestList(guests) {
+            const container = document.getElementById('guestListContainer');
+            container.innerHTML = '';
+            
+            if (guests.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-4 italic">Ainda ninguém confirmou... 🦗</p>';
+                return;
+            }
+
+            guests.sort((a, b) => {
+                const dateA = a.timestamp?.seconds ? new Date(a.timestamp.seconds * 1000) : new Date(a.timestamp);
+                const dateB = b.timestamp?.seconds ? new Date(b.timestamp.seconds * 1000) : new Date(b.timestamp);
+                return dateB - dateA;
+            });
+
+            guests.forEach(guest => {
+                const div = document.createElement('div');
+                div.className = 'bg-white p-3 rounded-lg border border-gray-200 shadow-sm flex flex-col gap-1';
+                const guestDate = guest.timestamp?.seconds ? new Date(guest.timestamp.seconds * 1000) : new Date(guest.timestamp);
+                const timeStr = !isNaN(guestDate) ? guestDate.toLocaleDateString('pt-BR') : 'Data desc.';
+                
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <span class="font-bold text-[#2F3E28]">${guest.name}</span>
+                        <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">${timeStr}</span>
+                    </div>
+                    ${guest.companions ? `<div class="text-xs text-gray-600 border-l-2 border-[#739072] pl-2 mt-1">Com: ${guest.companions}</div>` : ''}
+                `;
+                container.appendChild(div);
+            });
+        }
+
         adminBtn.addEventListener('click', async () => {
-            // Garantir que tentamos conectar antes de mostrar erro
-            if (!auth || !auth.currentUser) {
-                await initFirebase();
+            const password = prompt("Digite a senha de admin:");
+            if (password !== EVENT_CONFIG.adminPassword) {
+                alert("Senha incorreta!");
+                return;
             }
 
             modal.classList.add('active');
             
-            if (!db || !auth || !auth.currentUser) {
-                document.getElementById('guestListContainer').innerHTML = `
-                    <div class="text-center p-4">
-                        <i data-lucide="wifi-off" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
-                        <p class="text-gray-600 font-bold">Modo Offline</p>
-                        <p class="text-xs text-gray-500 mt-1">A lista em tempo real requer conexão e hospedagem online. Esta é apenas uma pré-visualização.</p>
-                    </div>
-                `;
-                lucide.createIcons();
+            if (isOfflineMode) {
+                const localGuests = JSON.parse(localStorage.getItem('guest_list_local') || '[]');
+                renderGuestList(localGuests);
                 return;
             }
             
-            if (!unsubscribeList && auth.currentUser) {
-                const q = collection(db, 'artifacts', appId, 'public', 'data', 'guest_list');
+            if (!unsubscribeList && db) {
+                const q = collection(db, 'lista_convidados');
                 unsubscribeList = onSnapshot(q, (snapshot) => {
-                    const container = document.getElementById('guestListContainer');
-                    container.innerHTML = '';
-                    
-                    if (snapshot.empty) {
-                        container.innerHTML = '<p class="text-center text-gray-500 py-4 italic">Ainda ninguém confirmou... 🦗</p>';
-                        return;
-                    }
-
                     const guests = [];
                     snapshot.forEach(doc => guests.push(doc.data()));
-                    guests.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-                    guests.forEach(guest => {
-                        const div = document.createElement('div');
-                        div.className = 'bg-white p-3 rounded-lg border border-gray-200 shadow-sm flex flex-col gap-1';
-                        
-                        const timeStr = guest.timestamp ? new Date(guest.timestamp.seconds * 1000).toLocaleDateString('pt-BR') : 'Data desc.';
-                        
-                        div.innerHTML = `
-                            <div class="flex justify-between items-start">
-                                <span class="font-bold text-[#2F3E28]">${guest.name}</span>
-                                <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">${timeStr}</span>
-                            </div>
-                            ${guest.companions ? `<div class="text-xs text-gray-600 border-l-2 border-[#739072] pl-2 mt-1">Com: ${guest.companions}</div>` : ''}
-                        `;
-                        container.appendChild(div);
-                    });
+                    renderGuestList(guests);
                 }, (error) => {
                      console.error("Erro lista:", error);
-                     document.getElementById('guestListContainer').innerHTML = '<p class="text-red-500 text-center text-xs">Erro de conexão (Permissões).</p>';
+                     document.getElementById('guestListContainer').innerHTML = '<p class="text-red-500 text-center text-xs">Erro de permissão ou conexão.</p>';
                 });
             }
         });
