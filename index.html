@@ -226,8 +226,7 @@
             eventTitle: "B-day da May", 
             date: "2026-02-09T19:00:00",
             locationName: "Bar e Restaurante Esperança",
-            address: "Rua Esperança, 12 - Parque União, RJ",
-            whatsappNumber: "5521999999999" 
+            address: "Rua Esperança, 12 - Parque União, RJ"
         };
 
         let app, db, auth, appId;
@@ -344,6 +343,10 @@
                         companions: companions,
                         timestamp: new Date()
                     });
+                } else {
+                    // Simula delay se não houver DB (ex: offline ou sem config)
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    console.warn("Modo demonstração: Sem banco de dados, a confirmação é apenas visual.");
                 }
                
                 confetti({
@@ -356,17 +359,8 @@
 
                 document.getElementById('statusMsg').classList.remove('hidden');
                 
-                // Sempre abre o WhatsApp
-                let message = `Opa ${EVENT_CONFIG.hostName}! Tudo bom? 🌿\n\nConfirmo minha presença no *${EVENT_CONFIG.eventTitle}*!\n\n*Nome:* ${name}`;
-                if(companions.trim()) {
-                    message += `\n*Quem vai comigo:* ${companions}`;
-                }
-                message += `\n\nJá tô na contagem regressiva! Beijos! 💚`;
-
+                // Reset após delay visual
                 setTimeout(() => {
-                    const url = `https://wa.me/${EVENT_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
-                    window.open(url, '_blank');
-                    
                     btn.disabled = false;
                     btn.innerHTML = originalText;
                     document.getElementById('name').value = '';
@@ -375,9 +369,7 @@
 
             } catch (error) {
                 console.error("Erro:", error);
-                // Fallback para WhatsApp em caso de erro
-                const url = `https://wa.me/${EVENT_CONFIG.whatsappNumber}?text=Confirmo! (Erro no site, mas vou!)`;
-                window.open(url, '_blank');
+                alert("Houve um erro ao salvar a confirmação. Tente novamente.");
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
@@ -391,7 +383,7 @@
 
         adminBtn.addEventListener('click', () => {
             if (!db || !auth) {
-                alert("A lista em tempo real requer conexão e configuração do servidor. Por favor, verifique o WhatsApp para as confirmações.");
+                alert("A lista em tempo real requer conexão e configuração do servidor.");
                 return;
             }
             
