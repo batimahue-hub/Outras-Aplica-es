@@ -218,7 +218,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
         // 1. Definições Iniciais (UI e Config)
         const EVENT_CONFIG = {
@@ -233,8 +233,6 @@
         // ==========================================
         // 🚨 CONFIGURAÇÃO DO FIREBASE (GOOGLE) 🚨
         // ==========================================
-        // Cole as chaves do seu projeto Firebase aqui para funcionar no GitHub.
-        // Se este objeto estiver vazio, o modo Offline será ativado.
         const userFirebaseConfig = {
             apiKey: "AIzaSyAp89xUte6YK9J3m0xo7eYSCRseQcNdsPs",
             authDomain: "nivermay-81009.firebaseapp.com",
@@ -380,7 +378,7 @@
 
             try {
                 if (!isOfflineMode && db) {
-                     // Modo Online: Salvar no Firestore
+                     // Modo Online: Salvar no Firestore (Coleção simplificada 'lista_convidados')
                      await addDoc(collection(db, 'lista_convidados'), guestData);
                 } else {
                     // Modo Offline: Salvar no LocalStorage
