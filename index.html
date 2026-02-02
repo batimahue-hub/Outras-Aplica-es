@@ -218,7 +218,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
         // 1. Definições Iniciais (UI e Config)
         const EVENT_CONFIG = {
@@ -293,21 +293,31 @@
             console.error("Erro ao carregar visual:", e);
         }
 
-        // 3. Tentar Inicializar Firebase (Silenciosamente)
-        try {
-            if (typeof __firebase_config !== 'undefined') {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                
-                // Auth Anônima
-                signInAnonymously(auth).catch(err => console.warn("Modo Offline: Auth falhou", err));
+        // 3. Inicializar Firebase Corretamente (Com Token Customizado)
+        async function initFirebase() {
+            try {
+                if (typeof __firebase_config !== 'undefined') {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+                    appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                    
+                    // Lógica de Autenticação Robusta (CRÍTICO PARA CORRIGIR ERRO DE PERMISSÃO)
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    console.log("Conectado ao Firebase.");
+                }
+            } catch (e) {
+                console.warn("Modo Offline Ativado: Firebase não detectado.", e);
             }
-        } catch (e) {
-            console.warn("Modo Offline Ativado: Firebase não detectado.", e);
         }
+        
+        // Executar inicialização
+        initFirebase();
 
         // 4. Configurar Botões (Funcionam com ou sem Firebase)
         
@@ -336,7 +346,7 @@
             const companions = document.getElementById('companions').value;
 
             try {
-                // Tenta salvar APENAS se o banco de dados existir
+                // Tenta salvar APENAS se o banco de dados existir e estiver autenticado
                 if (db && auth && auth.currentUser) {
                      await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'guest_list'), {
                         name: name,
@@ -359,13 +369,12 @@
 
                 document.getElementById('statusMsg').classList.remove('hidden');
                 
-                // Reset após delay visual - REMOVED WHATSAPP REDIRECT
+                // Reset após delay visual
                 setTimeout(() => {
                     btn.disabled = false;
                     btn.innerHTML = originalText;
                     document.getElementById('name').value = '';
                     document.getElementById('companions').value = '';
-                    // Optional: hide status message after a while or leave it
                     setTimeout(() => {
                          document.getElementById('statusMsg').classList.add('hidden');
                     }, 3000);
@@ -373,7 +382,7 @@
 
             } catch (error) {
                 console.error("Erro:", error);
-                alert("Houve um erro ao salvar a confirmação. Tente novamente."); // REMOVED WHATSAPP FALLBACK
+                alert("Houve um erro ao salvar a confirmação. Tente novamente.");
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
@@ -385,13 +394,25 @@
         const closeModal = document.getElementById('closeModal');
         let unsubscribeList = null;
 
-        adminBtn.addEventListener('click', () => {
-            if (!db || !auth) {
-                alert("A lista em tempo real requer conexão e configuração do servidor.");
+        adminBtn.addEventListener('click', async () => {
+            // Garantir que tentamos conectar antes de mostrar erro
+            if (!auth || !auth.currentUser) {
+                await initFirebase();
+            }
+
+            modal.classList.add('active');
+            
+            if (!db || !auth || !auth.currentUser) {
+                document.getElementById('guestListContainer').innerHTML = `
+                    <div class="text-center p-4">
+                        <i data-lucide="wifi-off" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
+                        <p class="text-gray-600 font-bold">Modo Offline</p>
+                        <p class="text-xs text-gray-500 mt-1">A lista em tempo real requer conexão e hospedagem online. Esta é apenas uma pré-visualização.</p>
+                    </div>
+                `;
+                lucide.createIcons();
                 return;
             }
-            
-            modal.classList.add('active');
             
             if (!unsubscribeList && auth.currentUser) {
                 const q = collection(db, 'artifacts', appId, 'public', 'data', 'guest_list');
@@ -425,7 +446,7 @@
                     });
                 }, (error) => {
                      console.error("Erro lista:", error);
-                     document.getElementById('guestListContainer').innerHTML = '<p class="text-red-500 text-center text-xs">Erro de conexão.</p>';
+                     document.getElementById('guestListContainer').innerHTML = '<p class="text-red-500 text-center text-xs">Erro de conexão (Permissões).</p>';
                 });
             }
         });
