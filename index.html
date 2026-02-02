@@ -359,17 +359,21 @@
 
                 document.getElementById('statusMsg').classList.remove('hidden');
                 
-                // Reset após delay visual
+                // Reset após delay visual - REMOVED WHATSAPP REDIRECT
                 setTimeout(() => {
                     btn.disabled = false;
                     btn.innerHTML = originalText;
                     document.getElementById('name').value = '';
                     document.getElementById('companions').value = '';
+                    // Optional: hide status message after a while or leave it
+                    setTimeout(() => {
+                         document.getElementById('statusMsg').classList.add('hidden');
+                    }, 3000);
                 }, 1500);
 
             } catch (error) {
                 console.error("Erro:", error);
-                alert("Houve um erro ao salvar a confirmação. Tente novamente.");
+                alert("Houve um erro ao salvar a confirmação. Tente novamente."); // REMOVED WHATSAPP FALLBACK
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
