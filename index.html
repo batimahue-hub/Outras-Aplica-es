@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bora Celebrar! 🌿</title>
     
+    <!-- Bibliotecas Externas -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -35,7 +36,7 @@
 
         .paper-texture {
             background-color: #F5F7F2;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%234F6F52' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%234F6F52' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
         }
 
         .washi-tape {
@@ -68,17 +69,6 @@
             border-color: #4F6F52;
             ring: 2px solid #A3BFA8;
         }
-        
-        /* Modal Styles */
-        .modal {
-            transition: opacity 0.3s ease-in-out;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
     </style>
 </head>
 
@@ -88,6 +78,7 @@
         
         <div class="absolute -top-16 -left-16 w-64 h-64 bg-[#739072]/10 rounded-full blur-3xl z-0"></div>
 
+        <!-- Cabeçalho Vibrante -->
         <div class="relative z-10 mx-4 mt-8 mb-6">
             <div class="h-72 bg-cover bg-center rounded-xl torn-paper shadow-lg relative overflow-hidden border-4 border-white transform rotate-1" 
                  style="background-image: url('https://images.unsplash.com/photo-1543788303-34651a0b329c?q=80&w=1000&auto=format&fit=crop');">
@@ -116,8 +107,10 @@
 
         <div class="p-6 space-y-6 relative z-10">
             
+            <!-- Contagem Regressiva -->
             <div class="grid grid-cols-4 gap-2 text-center" id="countdown"></div>
 
+            <!-- Detalhes -->
             <div class="bg-white/80 backdrop-blur-sm p-6 rounded-sm border-t-8 border-t-[#739072]/50 shadow-sm transform -rotate-1 relative">
                 <div class="absolute -top-3 right-1/2 transform translate-x-1/2 w-16 h-4 bg-white/40 blur-[1px]"></div>
 
@@ -147,6 +140,7 @@
                 </div>
             </div>
 
+            <!-- Formulário -->
             <div class="bg-[#FDFBF7] rounded-sm p-6 shadow-inner border border-[#D1D5DB] relative torn-paper transform rotate-1">
                 <div class="absolute inset-0" style="background-image: linear-gradient(#e5e7eb 1px, transparent 1px); background-size: 100% 24px; margin-top: 2rem;"></div>
 
@@ -172,17 +166,16 @@
                         <span>Confirmar Presença</span>
                         <i data-lucide="send" class="w-4 h-4"></i>
                     </button>
-                    <p id="statusMsg" class="text-center text-xs text-green-700 font-bold hidden">Confirmado! 🌿</p>
+                    <p id="statusMsg" class="text-center text-xs text-green-700 font-bold hidden bg-green-50 p-2 rounded mt-2 border border-green-200">
+                        Confirmado! Verifique seu nome na lista em breve. 🌿
+                    </p>
                 </form>
             </div>
         </div>
         
         <div class="h-6 w-full relative z-10 mt-4 opacity-50" style="background-image: repeating-linear-gradient(45deg, #739072 0, #739072 10px, transparent 10px, transparent 20px);"></div>
         
-        <div class="relative z-20 flex justify-between items-end px-6 pb-4">
-            <button id="adminBtn" class="text-[10px] text-[#4F6F52]/50 uppercase font-bold hover:text-[#4F6F52] flex items-center gap-1">
-                <i data-lucide="lock" class="w-3 h-3"></i> Admin
-            </button>
+        <div class="relative z-20 flex justify-center items-end px-6 pb-4">
             <div class="bg-white rounded-full p-3 shadow-xl sticker transform -rotate-12 border-2 border-[#A3BFA8] flex flex-col items-center justify-center w-16 h-16">
                 <span class="text-[8px] font-bold text-[#4F6F52] uppercase">Vibe</span>
                 <i data-lucide="smile" class="w-6 h-6 text-orange-400 my-0.5"></i>
@@ -191,106 +184,34 @@
         </div>
     </div>
 
-    <div id="guestListModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col">
-            <div class="bg-[#4F6F52] p-4 flex justify-between items-center text-white">
-                <h3 class="font-bold text-lg flex items-center gap-2">
-                    <i data-lucide="users" class="w-5 h-5"></i> Lista de Presença
-                </h3>
-                <button id="closeModal" class="hover:bg-white/20 p-1 rounded-full transition"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <div class="p-4 overflow-y-auto flex-1 bg-[#F5F7F2]">
-                <div id="guestListContainer" class="space-y-2">
-                    <p class="text-center text-gray-500 py-4 text-sm">A carregar lista...</p>
-                </div>
-            </div>
-            <div class="p-3 bg-gray-50 text-center text-xs text-gray-400 border-t" id="connectionStatus">
-                A verificar conexão...
-            </div>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-        import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-
-        // 1. Definições Iniciais
+    <script>
+        // ==========================================
+        // ⚙️ CONFIGURAÇÃO - EDITE AQUI
+        // ==========================================
         const EVENT_CONFIG = {
             hostName: "May 💚", 
             eventTitle: "B-day da May", 
             date: "2026-02-09T19:00:00",
             locationName: "Bar e Restaurante Esperança",
             address: "Rua Esperança, 12 - Parque União, RJ",
-            adminPassword: "123" 
+            // 👇 AQUI ESTÁ SEU LINK DA PLANILHA 👇
+            googleScriptUrl: "https://script.google.com/macros/s/AKfycbyq2qUIPhZOxjY2P6nA6qcQ9igz-wdq8JHKOwg3BnD8UWe1CTWpehJkTnpH1klcSzRt/exec" 
         };
+        // ==========================================
 
-        // Configurações do Firebase
-        const userFirebaseConfig = {
-            apiKey: "AIzaSyAp89xUte6YK9J3m0xo7eYSCRseQcNdsPs",
-            authDomain: "nivermay-81009.firebaseapp.com",
-            projectId: "nivermay-81009",
-            storageBucket: "nivermay-81009.firebasestorage.app",
-            messagingSenderId: "683682965047",
-            appId: "1:683682965047:web:978552016e718a673341b2",
-            measurementId: "G-CTW4GDRNF5"
-        };
-
-        let app, db, auth;
-        let isOfflineMode = false;
-
-        // Inicializar UI
         lucide.createIcons();
-        loadEventDetails();
-        startCountdown();
 
-        // 2. Inicializar Firebase
-        async function initFirebase() {
-            try {
-                app = initializeApp(userFirebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                
-                // Monitoriza estado para UI e tenta autenticar se cair
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        const el = document.getElementById('connectionStatus');
-                        if(el) el.innerHTML = "Online 🟢 Lista Sincronizada";
-                        console.log("Conectado à nuvem.");
-                        isOfflineMode = false;
-                    } else {
-                        // Tenta login anônimo se não houver user
-                        signInAnonymously(auth).catch(e => {
-                            console.error("Erro auth automática:", e);
-                            activateOfflineMode();
-                        });
-                    }
-                });
-
-            } catch (e) {
-                console.warn("Falha na inicialização do Firebase.", e);
-                activateOfflineMode();
-            }
-        }
-
-        function activateOfflineMode() {
-            isOfflineMode = true;
-            const el = document.getElementById('connectionStatus');
-            if(el) el.innerHTML = "Modo Local (Sem sincronização) 💾 <br> <span class='text-[10px]'>Verifique se o domínio está autorizado no Firebase</span>";
-        }
-        
-        // Iniciar Conexão
-        initFirebase();
-
-        // --- FUNÇÕES UI ---
         function loadEventDetails() {
             document.getElementById('displayHostName').innerText = EVENT_CONFIG.hostName;
+            
             const eventDate = new Date(EVENT_CONFIG.date);
             const options = { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
             const dateString = eventDate.toLocaleDateString('pt-BR', options);
             document.getElementById('displayDate').innerText = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+            
             document.getElementById('displayLocationName').innerText = EVENT_CONFIG.locationName;
             document.getElementById('displayAddress').innerText = EVENT_CONFIG.address;
+            
             const mapQuery = encodeURIComponent(EVENT_CONFIG.address);
             document.getElementById('mapsLink').href = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
         }
@@ -298,18 +219,22 @@
         function startCountdown() {
             const eventDate = new Date(EVENT_CONFIG.date).getTime();
             const container = document.getElementById("countdown");
+
             const timer = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = eventDate - now;
+
                 if (distance < 0) {
                     clearInterval(timer);
                     container.innerHTML = "<div class='col-span-4 text-[#4F6F52] text-lg font-bold bg-[#E9F1E6] p-2 rounded border border-[#A3BFA8] handwritten'>🚀 A festa começou!</div>";
                     return;
                 }
+
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
                 container.innerHTML = `
                     <div class="bg-[#E9F1E6] rounded-sm p-1 border border-[#A3BFA8] shadow-sm transform hover:scale-105 transition-transform"><span class="block text-xl font-black text-[#2F3E28] font-[Inter] leading-none mb-1">${days}</span><span class="text-[8px] uppercase text-[#739072] font-bold tracking-wider">DIAS</span></div>
                     <div class="bg-[#E9F1E6] rounded-sm p-1 border border-[#A3BFA8] shadow-sm transform hover:scale-105 transition-transform"><span class="block text-xl font-black text-[#2F3E28] font-[Inter] leading-none mb-1">${hours}</span><span class="text-[8px] uppercase text-[#739072] font-bold tracking-wider">HRS</span></div>
@@ -319,134 +244,69 @@
             }, 1000);
         }
 
-        // --- BOTÕES ---
-        const calBtn = document.getElementById('addToCalendarBtn');
-        if (calBtn) {
-            calBtn.addEventListener('click', () => {
-                const start = new Date(EVENT_CONFIG.date);
-                const end = new Date(start.getTime() + (4 * 60 * 60 * 1000));
-                const formatGoogleDate = (date) => date.toISOString().replace(/-|:|\.\d\d\d/g, "");
-                const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(EVENT_CONFIG.eventTitle)}&dates=${formatGoogleDate(start)}/${formatGoogleDate(end)}&details=Vai+ser+incrível!&location=${encodeURIComponent(EVENT_CONFIG.address)}`;
-                window.open(url, '_blank');
-            });
-        }
+        // Calendário
+        document.getElementById('addToCalendarBtn').addEventListener('click', () => {
+            const start = new Date(EVENT_CONFIG.date);
+            const end = new Date(start.getTime() + (4 * 60 * 60 * 1000));
+            const formatGoogleDate = (date) => date.toISOString().replace(/-|:|\.\d\d\d/g, "");
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(EVENT_CONFIG.eventTitle)}&dates=${formatGoogleDate(start)}/${formatGoogleDate(end)}&details=Vai+ser+incrível!&location=${encodeURIComponent(EVENT_CONFIG.address)}`;
+            window.open(url, '_blank');
+        });
 
-        // --- ENVIO FORMULÁRIO ---
-        document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+        // ENVIO PARA PLANILHA
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const originalText = btn.innerHTML;
-            btn.disabled = true; btn.innerHTML = 'Enviando...';
+            
+            btn.disabled = true;
+            btn.innerHTML = 'Enviando...';
 
             const name = document.getElementById('name').value;
             const companions = document.getElementById('companions').value;
-            const guestData = { name: name, companions: companions, timestamp: new Date() };
 
-            try {
-                // Se Firebase estiver ok
-                if (!isOfflineMode && db && auth.currentUser) {
-                     await addDoc(collection(db, 'lista_convidados'), guestData);
-                } else {
-                    // Fallback Local
-                    throw new Error("Modo Offline Ativo");
-                }
-               
-                confetti({ particleCount: 180, spread: 100, origin: { y: 0.6 }, colors: ['#4F6F52', '#739072', '#A3BFA8', '#FCD34D'], shapes: ['circle', 'square'] });
+            // Dados a enviar
+            const data = { name: name, companions: companions };
+
+            // Envio Real via Fetch
+            fetch(EVENT_CONFIG.googleScriptUrl, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                // Sucesso
+                confetti({
+                    particleCount: 180,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#4F6F52', '#739072', '#A3BFA8', '#FCD34D'],
+                    shapes: ['circle', 'square'] 
+                });
+
                 document.getElementById('statusMsg').classList.remove('hidden');
                 
-                setTimeout(() => {
-                    btn.disabled = false; btn.innerHTML = originalText;
-                    document.getElementById('name').value = ''; document.getElementById('companions').value = '';
-                    setTimeout(() => { document.getElementById('statusMsg').classList.add('hidden'); }, 3000);
-                }, 1500);
+                // Limpar form
+                document.getElementById('name').value = '';
+                document.getElementById('companions').value = '';
 
-            } catch (error) {
-                console.log("Salvando localmente devido a:", error.message);
-                
-                const currentList = JSON.parse(localStorage.getItem('guest_list_local') || '[]');
-                currentList.push({ ...guestData, timestamp: new Date().toISOString() });
-                localStorage.setItem('guest_list_local', JSON.stringify(currentList));
-                
-                document.getElementById('statusMsg').classList.remove('hidden');
                 setTimeout(() => {
-                    btn.disabled = false; btn.innerHTML = originalText;
-                    document.getElementById('name').value = ''; document.getElementById('companions').value = '';
-                    setTimeout(() => { document.getElementById('statusMsg').classList.add('hidden'); }, 3000);
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    setTimeout(() => { document.getElementById('statusMsg').classList.add('hidden'); }, 4000);
                 }, 1500);
-            }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao enviar. Verifique sua conexão.');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
         });
 
-        // --- ADMIN ---
-        const modal = document.getElementById('guestListModal');
-        const adminBtn = document.getElementById('adminBtn');
-        const closeModal = document.getElementById('closeModal');
-        let unsubscribeList = null;
-
-        function renderGuestList(guests) {
-            const container = document.getElementById('guestListContainer');
-            container.innerHTML = '';
-            if (guests.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-500 py-4 italic">Ainda ninguém confirmou... 🦗</p>'; return;
-            }
-            guests.sort((a, b) => {
-                const dateA = a.timestamp?.seconds ? new Date(a.timestamp.seconds * 1000) : new Date(a.timestamp);
-                const dateB = b.timestamp?.seconds ? new Date(b.timestamp.seconds * 1000) : new Date(b.timestamp);
-                return dateB - dateA;
-            });
-            guests.forEach(guest => {
-                const div = document.createElement('div');
-                div.className = 'bg-white p-3 rounded-lg border border-gray-200 shadow-sm flex flex-col gap-1';
-                const guestDate = guest.timestamp?.seconds ? new Date(guest.timestamp.seconds * 1000) : new Date(guest.timestamp);
-                const timeStr = !isNaN(guestDate) ? guestDate.toLocaleDateString('pt-BR') : 'Data desc.';
-                div.innerHTML = `<div class="flex justify-between items-start"><span class="font-bold text-[#2F3E28]">${guest.name}</span><span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">${timeStr}</span></div>${guest.companions ? `<div class="text-xs text-gray-600 border-l-2 border-[#739072] pl-2 mt-1">Com: ${guest.companions}</div>` : ''}`;
-                container.appendChild(div);
-            });
-        }
-
-        adminBtn.addEventListener('click', async () => {
-            // 1. Verificar senha
-            const password = prompt("Digite a senha de admin:");
-            if (password !== EVENT_CONFIG.adminPassword) { alert("Senha incorreta!"); return; }
-
-            // 2. Abrir Modal imediatamente
-            modal.classList.add('active');
-            const container = document.getElementById('guestListContainer');
-            
-            // 3. Lógica de Carregamento
-            
-            // Tenta forçar login se estiver desconectado
-            if (auth && !auth.currentUser && !isOfflineMode) {
-                container.innerHTML = '<p class="text-center text-gray-500 text-sm">A tentar reconectar...</p>';
-                try { await signInAnonymously(auth); } catch(e) {}
-            }
-
-            // Tenta ler do Firestore se tiver user
-            if (db && auth && auth.currentUser && !isOfflineMode) {
-                if (!unsubscribeList) {
-                    const q = collection(db, 'lista_convidados');
-                    unsubscribeList = onSnapshot(q, (snapshot) => {
-                        const guests = [];
-                        snapshot.forEach(doc => guests.push(doc.data()));
-                        renderGuestList(guests);
-                    }, (error) => {
-                         console.error("Erro leitura:", error);
-                         container.innerHTML = `<p class="text-red-500 text-center text-xs">Erro de permissão.</p><p class="text-xs text-center text-gray-400 mt-2">Verifique se o domínio do GitHub está autorizado no console do Firebase e as Regras do Firestore.</p>`;
-                    });
-                }
-            } else {
-                // Se estiver offline ou falhar, mostra lista local
-                const localGuests = JSON.parse(localStorage.getItem('guest_list_local') || '[]');
-                if (localGuests.length > 0) {
-                    renderGuestList(localGuests);
-                    const el = document.getElementById('connectionStatus');
-                    if(el) el.innerHTML = "A mostrar lista offline (backup) 💾";
-                } else {
-                    container.innerHTML = '<p class="text-center text-gray-500 py-4">Sem conexão e lista local vazia.</p>';
-                }
-            }
-        });
-
-        closeModal.addEventListener('click', () => { modal.classList.remove('active'); });
+        loadEventDetails();
+        startCountdown();
 
     </script>
 </body>
