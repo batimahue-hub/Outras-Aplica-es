@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bora Celebrar! 🌿</title>
+    
+    <!-- Bibliotecas Externas -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Inter:wght@400;600;800&family=Gloria+Hallelujah&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Abril Fatface', cursive; letter-spacing: 1px; }
+        .handwritten { font-family: 'Gloria Hallelujah', cursive; }
+        
+        :root {
+            --sage-dark: #2F3E28;
+            --sage-medium: #4F6F52;
+            --sage-light: #739072;
+            --cream: #F5F7F2;
+        }
+
+        .bg-nature { background: linear-gradient(135deg, #739072 0%, #A3BFA8 100%); }
+        .fade-in-up { animation: fadeInUp 0.8s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .pulse-slow { animation: pulseSlow 3s infinite ease-in-out; }
+        @keyframes pulseSlow {
+            0%, 100% { transform: scale(1) rotate(-2deg); }
+            50% { transform: scale(1.05) rotate(-2deg); }
+        }
+
+        .paper-texture {
+            background-color: #F5F7F2;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%234F6F52' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .washi-tape {
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            backdrop-filter: blur(2px);
+            border-left: 1px dashed rgba(255,255,255,0.6);
+            border-right: 1px dashed rgba(255,255,255,0.6);
+            transform: rotate(-3deg);
+        }
+
+        .sticker {
+            filter: drop-shadow(2px 4px 0px rgba(0,0,0,0.1));
+            transition: transform 0.2s;
+            background: #fff;
+            border: 2px solid #fff;
+        }
+        .sticker:hover { transform: scale(1.1) rotate(5deg); }
+
+        .torn-paper {
+            clip-path: polygon(2% 0%, 98% 1%, 100% 98%, 1% 99%);
+        }
+        
+        .input-field {
+            background-color: #fff;
+            border: 1px solid #A3BFA8;
+            color: #2F3E28;
+        }
+        .input-field:focus {
+            border-color: #4F6F52;
+            ring: 2px solid #A3BFA8;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-nature p-4 flex items-center justify-center text-slate-800">
+
+    <div class="max-w-md w-full paper-texture rounded-3xl shadow-[0_20px_60px_rgba(47,62,40,0.3)] overflow-hidden mb-10 fade-in-up border-4 border-[#A3BFA8] relative">
+        
+        <div class="absolute -top-16 -left-16 w-64 h-64 bg-[#739072]/10 rounded-full blur-3xl z-0"></div>
+
+        <!-- Cabeçalho Vibrante -->
+        <div class="relative z-10 mx-4 mt-8 mb-6">
+            <div class="h-72 bg-cover bg-center rounded-xl torn-paper shadow-lg relative overflow-hidden border-4 border-white transform rotate-1" 
+                 style="background-image: url('https://images.unsplash.com/photo-1543788303-34651a0b329c?q=80&w=1000&auto=format&fit=crop');">
+                <div class="absolute inset-0 bg-[#2F3E28]/40 mix-blend-multiply"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-[#2F3E28]/90 via-transparent to-transparent"></div>
+            </div>
+
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center px-4 z-20">
+                <div class="bg-white/95 backdrop-blur-sm p-6 rounded-sm shadow-xl border-2 border-[#A3BFA8] transform -rotate-2 pulse-slow relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 w-20 h-6 washi-tape"></div>
+                    <p class="text-xs font-bold text-[#739072] uppercase tracking-[0.2em] mb-1">Você é especial!</p>
+                    <h1 class="text-4xl text-[#2F3E28] leading-none mb-1 drop-shadow-sm">B-Day da</h1>
+                    <h1 class="text-5xl text-[#4F6F52] leading-none handwritten drop-shadow-sm" id="displayHostName">May 💚</h1>
+                    <div class="absolute -bottom-3 -right-3 text-2xl">✨</div>
+                </div>
+            </div>
+
+            <div class="absolute -top-3 -left-2 bg-[#FCD34D] p-2 rounded-full shadow-lg sticker transform -rotate-12 z-30">
+                <i data-lucide="party-popper" class="w-6 h-6 text-[#92400E]"></i>
+            </div>
+            
+            <div class="absolute -bottom-4 -right-1 bg-[#F5F7F2] p-2 rounded-full shadow-lg sticker transform rotate-12 z-30 border border-[#A3BFA8]">
+                <i data-lucide="clover" class="w-6 h-6 text-[#4F6F52]"></i>
+            </div>
+        </div>
+
+        <div class="p-6 space-y-6 relative z-10">
+            
+            <!-- Contagem Regressiva -->
+            <div class="grid grid-cols-4 gap-2 text-center" id="countdown"></div>
+
+            <!-- Detalhes -->
+            <div class="bg-white/80 backdrop-blur-sm p-6 rounded-sm border-t-8 border-t-[#739072]/50 shadow-sm transform -rotate-1 relative">
+                <div class="absolute -top-3 right-1/2 transform translate-x-1/2 w-16 h-4 bg-white/40 blur-[1px]"></div>
+
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="bg-green-100 p-2 rounded-full">
+                        <i data-lucide="calendar-heart" class="w-5 h-5 text-[#4F6F52]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg text-[#2F3E28] font-bold">Quando?</h3>
+                        <p class="text-gray-700 text-sm font-medium" id="displayDate">Carregando...</p>
+                        <button id="addToCalendarBtn" class="text-[10px] text-[#4F6F52] underline mt-1 font-bold uppercase tracking-wide hover:text-green-700">
+                            Salvar na Agenda
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-4">
+                    <div class="bg-orange-100 p-2 rounded-full">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-orange-700"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg text-[#2F3E28] font-bold">Onde?</h3>
+                        <p class="text-gray-700 font-bold text-sm" id="displayLocationName">Carregando...</p>
+                        <p class="text-gray-600 text-xs leading-snug" id="displayAddress">Carregando...</p>
+                        <a id="mapsLink" href="#" target="_blank" class="text-[10px] text-orange-700 font-bold underline mt-1 block hover:text-orange-900">Ver no Mapa</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário -->
+            <div class="bg-[#FDFBF7] rounded-sm p-6 shadow-inner border border-[#D1D5DB] relative torn-paper transform rotate-1">
+                <div class="absolute inset-0" style="background-image: linear-gradient(#e5e7eb 1px, transparent 1px); background-size: 100% 24px; margin-top: 2rem;"></div>
+
+                <form id="rsvpForm" class="space-y-4 relative z-10 pt-2">
+                    <div class="text-center mb-6">
+                        <h3 class="text-xl text-[#2F3E28] handwritten font-bold bg-[#FDFBF7] inline-block px-2 transform -rotate-2">
+                            Confirme sua Vibe! ✨
+                        </h3>
+                        <p class="text-[10px] font-bold text-[#4F6F52] uppercase tracking-wide mt-1 bg-[#FDFBF7] inline-block px-1">Sua presença é essencial!</p>
+                    </div>
+                    
+                    <div class="bg-[#FDFBF7]/80 backdrop-blur-[2px]">
+                        <label class="block text-xs font-bold text-[#4F6F52] uppercase mb-1 ml-1">Seu Nome</label>
+                        <input type="text" id="name" required placeholder="Como devo te chamar?" class="w-full px-4 py-2 rounded-lg outline-none transition-all text-sm input-field placeholder-[#739072]/60 bg-white">
+                    </div>
+
+                    <div class="bg-[#FDFBF7]/80 backdrop-blur-[2px]">
+                        <label class="block text-xs font-bold text-[#4F6F52] uppercase mb-1 ml-1">Acompanhantes</label>
+                        <textarea id="companions" placeholder="Quem vem junto? (Amigos, família, papagaio...)" class="w-full px-4 py-2 rounded-lg outline-none text-sm h-16 resize-none input-field placeholder-[#739072]/60 bg-white"></textarea>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="group w-full bg-[#4F6F52] hover:bg-[#2F3E28] text-white font-bold py-3 rounded-lg shadow-md transform active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2">
+                        <span>Confirmar Presença</span>
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                    <p id="statusMsg" class="text-center text-xs text-green-700 font-bold hidden bg-green-50 p-2 rounded mt-2 border border-green-200">
+                        Confirmado! Verifique seu nome na lista em breve. 🌿
+                    </p>
+                </form>
+            </div>
+        </div>
+        
+        <div class="h-6 w-full relative z-10 mt-4 opacity-50" style="background-image: repeating-linear-gradient(45deg, #739072 0, #739072 10px, transparent 10px, transparent 20px);"></div>
+        
+        <div class="relative z-20 flex justify-center items-end px-6 pb-4">
+            <div class="bg-white rounded-full p-3 shadow-xl sticker transform -rotate-12 border-2 border-[#A3BFA8] flex flex-col items-center justify-center w-16 h-16">
+                <span class="text-[8px] font-bold text-[#4F6F52] uppercase">Vibe</span>
+                <i data-lucide="smile" class="w-6 h-6 text-orange-400 my-0.5"></i>
+                <span class="text-[8px] font-bold text-[#4F6F52] uppercase">Boa</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // ⚙️ CONFIGURAÇÃO - EDITE AQUI
+        // ==========================================
+        const EVENT_CONFIG = {
+            hostName: "May 💚", 
+            eventTitle: "B-day da May", 
+            date: "2026-02-09T19:00:00",
+            locationName: "Bar e Restaurante Esperança",
+            address: "Rua Esperança, 12 - Parque União, RJ",
+            // 👇 AQUI ESTÁ SEU LINK DA PLANILHA 👇
+            googleScriptUrl: "https://script.google.com/macros/s/AKfycbyq2qUIPhZOxjY2P6nA6qcQ9igz-wdq8JHKOwg3BnD8UWe1CTWpehJkTnpH1klcSzRt/exec" 
+        };
+        // ==========================================
+
+        lucide.createIcons();
+
+        function loadEventDetails() {
+            document.getElementById('displayHostName').innerText = EVENT_CONFIG.hostName;
+            
+            const eventDate = new Date(EVENT_CONFIG.date);
+            const options = { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
+            const dateString = eventDate.toLocaleDateString('pt-BR', options);
+            document.getElementById('displayDate').innerText = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+            
+            document.getElementById('displayLocationName').innerText = EVENT_CONFIG.locationName;
+            document.getElementById('displayAddress').innerText = EVENT_CONFIG.address;
+            
+            const mapQuery = encodeURIComponent(EVENT_CONFIG.address);
+            document.getElementById('mapsLink').href = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+        }
+
+        function startCountdown() {
+            const eventDate = new Date(EVENT_CONFIG.date).getTime();
+            const container = document.getElementById("countdown");
+
+            const timer = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = eventDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timer);
+                    container.innerHTML = "<div class='col-span-4 text-[#4F6F52] text-lg font-bold bg-[#E9F1E6] p-2 rounded border border-[#A3BFA8] handwritten'>🚀 A festa começou!</div>";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                container.innerHTML = `
+                    <div class="bg-[#E9F1E6] rounded-sm p-1 border border-[#A3BFA8] shadow-sm transform hover:scale-105 transition-transform"><span class="block text-xl font-black text-[#2F3E28] font-[Inter] leading-none mb-1">${days}</span><span class="text-[8px] uppercase text-[#739072] font-bold tracking-wider">DIAS</span></div>
+                    <div class="bg-[#E9F1E6] rounded-sm p-1 border border-[#A3BFA8] shadow-sm transform hover:scale-105 transition-transform"><span class="block text-xl font-black text-[#2F3E28] font-[Inter] leading-none mb-1">${hours}</span><span class="text-[8px] uppercase text-[#739072] font-bold tracking-wider">HRS</span></div>
+                    <div class="bg-[#E9F1E6] rounded-sm p-1 border border-[#A3BFA8] shadow-sm transform hover:scale-105 transition-transform"><span class="block text-xl font-black text-[#2F3E28] font-[Inter] leading-none mb-1">${minutes}</span><span class="text-[8px] uppercase text-[#739072] font-bold tracking-wider">MIN</span></div>
+                    <div class="bg-[#E9F1E6] rounded-sm p-1 border border-[#A3BFA8] shadow-sm transform hover:scale-105 transition-transform"><span class="block text-xl font-black text-[#2F3E28] font-[Inter] leading-none mb-1">${seconds}</span><span class="text-[8px] uppercase text-[#739072] font-bold tracking-wider">SEG</span></div>
+                `;
+            }, 1000);
+        }
+
+        // Calendário
+        document.getElementById('addToCalendarBtn').addEventListener('click', () => {
+            const start = new Date(EVENT_CONFIG.date);
+            const end = new Date(start.getTime() + (4 * 60 * 60 * 1000));
+            const formatGoogleDate = (date) => date.toISOString().replace(/-|:|\.\d\d\d/g, "");
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(EVENT_CONFIG.eventTitle)}&dates=${formatGoogleDate(start)}/${formatGoogleDate(end)}&details=Vai+ser+incrível!&location=${encodeURIComponent(EVENT_CONFIG.address)}`;
+            window.open(url, '_blank');
+        });
+
+        // ENVIO PARA PLANILHA
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = 'Enviando...';
+
+            const name = document.getElementById('name').value;
+            const companions = document.getElementById('companions').value;
+
+            // Dados a enviar
+            const data = { name: name, companions: companions };
+
+            // Envio Real via Fetch
+            fetch(EVENT_CONFIG.googleScriptUrl, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                // Sucesso
+                confetti({
+                    particleCount: 180,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#4F6F52', '#739072', '#A3BFA8', '#FCD34D'],
+                    shapes: ['circle', 'square'] 
+                });
+
+                document.getElementById('statusMsg').classList.remove('hidden');
+                
+                // Limpar form
+                document.getElementById('name').value = '';
+                document.getElementById('companions').value = '';
+
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    setTimeout(() => { document.getElementById('statusMsg').classList.add('hidden'); }, 4000);
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao enviar. Verifique sua conexão.');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
+        });
+
+        loadEventDetails();
+        startCountdown();
+
+    </script>
+</body>
+</html>
